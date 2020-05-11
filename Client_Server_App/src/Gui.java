@@ -1,6 +1,8 @@
 import java.awt.EventQueue;
+import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -12,12 +14,18 @@ import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextPane;
 import javax.swing.text.StyleConstants;
 import javax.swing.JTextArea;
+
+import java.awt.Color;
 import java.awt.Component;
+import javax.swing.JLabel;
 
 public class Gui {
 
@@ -27,7 +35,7 @@ public class Gui {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException  {
-		Socket sock = new Socket("127.0.0.1", 8080);
+		Socket sock = new Socket("127.0.0.1", 8081);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -36,11 +44,10 @@ public class Gui {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				
+				
 			}
 		});
-/*	sock.close();
-	socketScanner.close();
-	socketEmitter.close(); */
 	}
 
 	/**
@@ -59,99 +66,172 @@ public class Gui {
 	 * Initialize the contents of the frame.
 	 */
 	
+	public void activateAnswers(JButton answer1, JButton answer2, 
+			JButton answer3, JButton answer4, boolean enabled) {
+		if(enabled == true) {
+			  answer1.setEnabled(true);
+			  answer2.setEnabled(true);
+			  answer3.setEnabled(true);
+			  answer4.setEnabled(true);
+		} else {
+			  answer1.setEnabled(false);
+			  answer2.setEnabled(false);
+			  answer3.setEnabled(false);
+			  answer4.setEnabled(false);
+		}
+	}
+	
+	
+	public void renderQuestion(Question question, JButton answer1, JButton answer2, 
+			JButton answer3, JButton answer4, JTextArea questionArea) {
+		answer1.setText(question.getAnswear1());
+		answer2.setText(question.getAnswear2());
+		answer3.setText(question.getAnswear3());
+		answer4.setText(question.getAnswear4());
+		questionArea.setText(question.getQuestion());
+	}
+	
 	public void initialize(Socket sock) throws UnknownHostException, IOException, ClassNotFoundException {
 
+		frame = new JFrame();
+		frame.setBounds(100, 100, 1280, 720);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		
+		JButton answer1 = new JButton("Option1");
+		answer1.setBounds(185, 487, 215, 60);
+		frame.getContentPane().add(answer1);
+		answer1.setEnabled(false);
+		
+		JButton answer2 = new JButton("Option2");
+		answer2.setBounds(420, 487, 215, 60);
+		frame.getContentPane().add(answer2);
+		answer2.setEnabled(false);
+		
+		JButton answer3 = new JButton("Option3");
+		answer3.setBounds(185, 567, 215, 60);
+		frame.getContentPane().add(answer3);
+		answer3.setEnabled(false);
+		
+		JButton answer4 = new JButton("Option4");
+		answer4.setBounds(420, 567, 215, 60);
+		frame.getContentPane().add(answer4);
+		answer4.setEnabled(false);
+		
+		JTextArea questionArea = new JTextArea();
+		questionArea.setEditable(false);
+		questionArea.setBounds(185, 387, 450, 80);
+		frame.getContentPane().add(questionArea);
+		
+		JButton exitButton = new JButton("Exit");
+		exitButton.setBounds(1040, 577, 140, 40);
+		frame.getContentPane().add(exitButton);
+		
+		JButton startButton = new JButton("Start");
+		startButton.setBounds(880, 577, 140, 40);
+		frame.getContentPane().add(startButton);
+		
+		JButton nextQuestionButton = new JButton("Next question");
+		nextQuestionButton.setBounds(676, 604, 155, 23);
+		frame.getContentPane().add(nextQuestionButton);
+		nextQuestionButton.setEnabled(false);
+		
+		JLabel backgroundLabel = new JLabel("");
+		backgroundLabel.setBounds(0, 0, 1280, 720);
+		ImageIcon icon  = new ImageIcon("Images/background.jpg");
+		backgroundLabel.setIcon(icon);
+		frame.getContentPane().add(backgroundLabel);
+		
+		
+		
 		PrintStream answearEmitter = new PrintStream(sock.getOutputStream());
         InputStream inputStream = sock.getInputStream();
 		// create a DataInputStream so we can read data from it.
         ObjectInputStream  objectInputStream = new ObjectInputStream(inputStream);
+        Scanner socketReader = new Scanner(sock.getInputStream());
         
-        ArrayList<Question> questions  = (ArrayList<Question>)objectInputStream.readObject();
-	     
-	        
-	       
         
 		
-		frame = new JFrame();
-		frame.setBounds(100, 100, 650, 500);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(null);
-		
-		JButton answer1 = new JButton("Option1");
-		answer1.setBounds(132, 211, 117, 42);
-		frame.getContentPane().add(answer1);
-		
-		
-		JButton answer2 = new JButton("Option2");
-		answer2.setBounds(282, 211, 117, 42);
-		frame.getContentPane().add(answer2);
-		
-		JButton answer3 = new JButton("Option3");
-		answer3.setBounds(132, 265, 117, 42);
-		frame.getContentPane().add(answer3);
-		
-		JButton answer4 = new JButton("Option4");
-		answer4.setBounds(282, 265, 117, 42);
-		frame.getContentPane().add(answer4);
-		
-		JTextArea questionArea = new JTextArea();
-		questionArea.setEditable(false);
-		questionArea.setBounds(73, 106, 408, 73);
-		frame.getContentPane().add(questionArea);
-		
-		JButton questionGenerator = new JButton("Genereaza intrebare");
-		questionGenerator.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Random rand = new Random();
-				int randomQuestionIndex = rand.nextInt(questions.size());
-			    questionArea.setText(questions.get(randomQuestionIndex).getQuestion());
-		        answer1.setText(questions.get(randomQuestionIndex).getAnswear1());
-		        answer2.setText(questions.get(randomQuestionIndex).getAnswear2());
-		        answer3.setText(questions.get(randomQuestionIndex).getAnswear3());
-		        answer4.setText(questions.get(randomQuestionIndex).getAnswear4());
-		        
-		        
-			}
-		});
-		questionGenerator.setBounds(175, 318, 177, 42);
-		frame.getContentPane().add(questionGenerator);
-		
-		JButton exitButton = new JButton("Exit");
-		exitButton.setBounds(175, 393, 188, 23);
+		answer1.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) {
+				  answearEmitter.println(answer1.getText());
+				  nextQuestionButton.setEnabled(true);
+				  activateAnswers(answer1, answer2, answer3, answer4, false);
+				  
+				  
+				  
+			  } 
+			} );
+		answer2.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  answearEmitter.println(answer2.getText());
+				  nextQuestionButton.setEnabled(true);
+				  activateAnswers(answer1, answer2, answer3, answer4, false);
+			  } 
+			} );
+		answer3.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  answearEmitter.println(answer3.getText());
+				  nextQuestionButton.setEnabled(true);
+				  activateAnswers(answer1, answer2, answer3, answer4, false);
+			  } 
+			} );
+		answer4.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  answearEmitter.println(answer4.getText());
+				  nextQuestionButton.setEnabled(true);
+				  activateAnswers(answer1, answer2, answer3, answer4, false);
+			  } 
+			} );
+		startButton.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  ImageIcon icon  = new ImageIcon("Images/firstQuestion.jpg");
+				  backgroundLabel.setIcon(icon);
+				  startButton.setEnabled(false);
+				  Question question = null;
+				try {
+					question = (Question)objectInputStream.readObject();
+				} catch (ClassNotFoundException | IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				  renderQuestion(question, answer1, answer2, answer3, answer4, questionArea); 
+				  activateAnswers(answer1, answer2, answer3, answer4, true);
+				  System.out.println("apasat start");
+			  } 
+			} );
 		exitButton.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  answearEmitter.println("exit");
 				  System.exit(1);
 			  } 
 			} );
+		nextQuestionButton.addActionListener(new ActionListener() { 
+			  public void actionPerformed(ActionEvent e) { 
+				  if(startButton.isEnabled() == false) {
+					  Question question = null;
+						try {
+							question = (Question)objectInputStream.readObject();
+						} catch (ClassNotFoundException | IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						  renderQuestion(question, answer1, answer2, answer3, answer4, questionArea); 
+						  answer1.setEnabled(true);
+						  answer2.setEnabled(true);
+						  answer3.setEnabled(true);
+						  answer4.setEnabled(true);
+						  nextQuestionButton.setEnabled(false);
+						  
+						 
+				  }
+			  } 
+			} );
 		
-		answer2.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  
-			  } 
-			} );
-		frame.getContentPane().add(exitButton);
 		
-		answer1.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  answearEmitter.println(answer1.getText());
-			  } 
-			} );
-		answer2.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  answearEmitter.println(answer2.getText());
-			  } 
-			} );
-		answer3.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  answearEmitter.println(answer3.getText());
-			  } 
-			} );
-		answer4.addActionListener(new ActionListener() { 
-			  public void actionPerformed(ActionEvent e) { 
-				  answearEmitter.println(answer4.getText());
-			  } 
-			} );
+		
+		
 		
 		
 	}
