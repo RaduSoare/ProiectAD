@@ -35,11 +35,9 @@ public class Server {
         OutputStream outputStream = sock.getOutputStream();
         // create an object output stream from the output stream so we can send an object through it
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
-
         for(int i = 0; i < questions.size(); i++) {
         	objectOutputStream.writeObject(questions.get(i));
         	answear = socketReader.nextLine();
-        	
         	if(answear.equals(questions.get(i).getcorrectAnswear())) {
         		objectOutputStream.writeObject("ok");
         	} else {
@@ -47,10 +45,6 @@ public class Server {
         		break;
         	}
         }
-        
-        
-        
-		
 		server_sock.close();
 		sock.close();
 		socketReader.close(); 
@@ -62,20 +56,3 @@ public class Server {
 }
 
 
-
-/*	public static void main(String[] args) throws IOException {
-		int number, temp;
-		ServerSocket server_sock = new ServerSocket(8082);
-		Socket sock = server_sock.accept();
-		Scanner sc = new Scanner(sock.getInputStream());
-		number = sc.nextInt();
-		temp = number * 2;
-		PrintStream p = new PrintStream(sock.getOutputStream());
-		p.println(temp);
-		
-		server_sock.close();
-		sock.close();
-		sc.close();
-		
-
-	} */

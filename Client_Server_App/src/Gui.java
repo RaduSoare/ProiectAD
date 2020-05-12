@@ -115,6 +115,22 @@ public class Gui {
 		  backgroundLabel.setIcon(icon);
 	}
 	
+	public void playerAnswerValidation(JButton nextQuestionButton, ObjectInputStream  objectInputStream ) {
+		  String serverM = null;
+		  try {
+			  serverM = (String)objectInputStream.readObject();
+			  if(serverM.equals("incorrect")) {
+				  JOptionPane.showMessageDialog(null, "Ai pierdut!");
+				  TimeUnit.SECONDS.sleep(1);
+				  nextQuestionButton.setEnabled(false);
+				  System.exit(0);
+			  }
+			  
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+	}
+	
 	public void initialize(Socket sock) throws UnknownHostException, IOException, ClassNotFoundException {
 
 		frame = new JFrame();
@@ -207,7 +223,6 @@ public class Gui {
 		
 		PrintStream answearEmitter = new PrintStream(sock.getOutputStream());
         InputStream inputStream = sock.getInputStream();
-		// create a DataInputStream so we can read data from it.
         ObjectInputStream  objectInputStream = new ObjectInputStream(inputStream);
         
         
@@ -217,94 +232,43 @@ public class Gui {
 				  answearEmitter.println(answer1.getText());
 				  nextQuestionButton.setEnabled(true);
 				  activateAnswers(answer1, answer2, answer3, answer4, false);
-				  String serverM = null;
-				  try {
-					  serverM = (String)objectInputStream.readObject();
-					  System.out.println(serverM);
-					  if(serverM.equals("incorrect")) {
-						  JOptionPane.showMessageDialog(null, "Mai bine mergeai la munca");
-						  TimeUnit.SECONDS.sleep(1);
-						  nextQuestionButton.setEnabled(false);
-						  System.exit(0);
-					  }
-					  
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+				  playerAnswerValidation(nextQuestionButton, objectInputStream);
 				
 				  
 				  
 			  } 
 			} );
+		
 		answer2.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  answearEmitter.println(answer2.getText());
 				  nextQuestionButton.setEnabled(true);
 				  activateAnswers(answer1, answer2, answer3, answer4, false);
-				  String serverM = null;
-				  try {
-					  serverM = (String)objectInputStream.readObject();
-					  System.out.println(serverM);
-					  if(serverM.equals("incorrect")) {
-						  JOptionPane.showMessageDialog(null, "Mai bine mergeai la munca");
-						  TimeUnit.SECONDS.sleep(1);
-						  nextQuestionButton.setEnabled(false);
-						  System.exit(0);
-					  }
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+				  playerAnswerValidation(nextQuestionButton, objectInputStream);
 				  
 			  } 
 			} );
+		
 		answer3.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  answearEmitter.println(answer3.getText());
 				  nextQuestionButton.setEnabled(true);
 				  activateAnswers(answer1, answer2, answer3, answer4, false);
-				  String serverM = null;
-				  try {
-					  serverM = (String)objectInputStream.readObject();
-					  System.out.println(serverM);
-					  if(serverM.equals("incorrect")) {
-						  JOptionPane.showMessageDialog(null, "Mai bine mergeai la munca");
-						  TimeUnit.SECONDS.sleep(1);
-						  nextQuestionButton.setEnabled(false);
-						  System.exit(0);
-					  }
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+				  playerAnswerValidation(nextQuestionButton, objectInputStream);
 				  
 			  } 
 			} );
+		
 		answer4.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  answearEmitter.println(answer4.getText());
 				  nextQuestionButton.setEnabled(true);
-				  String serverM = null;
-				  activateAnswers(answer1, answer2, answer3, answer4, false);
-				  try {
-					  serverM = (String)objectInputStream.readObject();
-					  System.out.println(serverM);
-					  if(serverM.equals("incorrect")) {
-						  JOptionPane.showMessageDialog(null, "Mai bine mergeai la munca");
-						  TimeUnit.SECONDS.sleep(1);
-						  nextQuestionButton.setEnabled(false);
-						  System.exit(0);
-					  }
-					
-					} catch (Exception e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+				  playerAnswerValidation(nextQuestionButton, objectInputStream);
 				 
 				  
 			  } 
 			} );
+		
 		startButton.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  backgroundUpdater(questionNumber, backgroundLabel);
@@ -312,9 +276,7 @@ public class Gui {
 				  Question question = null;
 				try {
 					question = (Question)objectInputStream.readObject();
-					System.out.println("citit prima intrebare");
 				} catch (ClassNotFoundException | IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				  renderQuestion(question, answer1, answer2, answer3, answer4, questionArea); 
@@ -322,11 +284,13 @@ public class Gui {
 				  
 			  } 
 			} );
+		
 		exitButton.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  System.exit(1);
 			  } 
 			} );
+		
 		nextQuestionButton.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  if(startButton.isEnabled() == false) {
@@ -335,7 +299,6 @@ public class Gui {
 						try {
 							 
 							question = (Question)objectInputStream.readObject();
-							 System.out.println(question.getQuestion());
 						} catch (EOFException e2) {
 							JOptionPane.showMessageDialog(null, "Ai castigat marele premiu");
 							try {
@@ -350,21 +313,13 @@ public class Gui {
 							e1.printStackTrace();
 						}
 						renderQuestion(question, answer1, answer2, answer3, answer4, questionArea); 
-						  answer1.setEnabled(true);
-						  answer2.setEnabled(true);
-						  answer3.setEnabled(true);
-						  answer4.setEnabled(true);
-						  nextQuestionButton.setEnabled(false);
-						  questionNumber++;
-
-						  backgroundUpdater(questionNumber, backgroundLabel);
+					    activateAnswers(answer1, answer2, answer3, answer4, true);
+					    nextQuestionButton.setEnabled(false);
+					    questionNumber++;
+ 					    backgroundUpdater(questionNumber, backgroundLabel);
 				  }
 			  } 
 			} );
-		
-		
-		
-		
 		
 		
 	}
