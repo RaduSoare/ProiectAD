@@ -2,11 +2,7 @@ import java.awt.EventQueue;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.PrintStream;
+import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -283,6 +279,16 @@ public class Gui {
 							 
 							question = (Question)objectInputStream.readObject();
 							 System.out.println(question.getQuestion());
+						} catch (EOFException e2) {
+							JOptionPane.showMessageDialog(null, "Ai castigat marele premiu");
+							try {
+								TimeUnit.SECONDS.sleep(1);
+							} catch (InterruptedException interruptedException) {
+								interruptedException.printStackTrace();
+							}
+							nextQuestionButton.setEnabled(false);
+							System.exit(0);
+
 						} catch (ClassNotFoundException | IOException e1) {
 							e1.printStackTrace();
 						}
