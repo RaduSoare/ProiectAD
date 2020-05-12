@@ -12,7 +12,7 @@ public class Server {
 
 	public static void main(String[] args) throws IOException {
 		String answear = null;
-		ServerSocket server_sock = new ServerSocket(8081);
+		ServerSocket server_sock = new ServerSocket(9091);
 		Socket sock = server_sock.accept();
 		Scanner socketReader = new Scanner(sock.getInputStream());
 		PrintStream socketEmitter = new PrintStream(sock.getOutputStream());

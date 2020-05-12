@@ -1,4 +1,5 @@
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,7 +36,7 @@ public class Gui {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException  {
-		Socket sock = new Socket("127.0.0.1", 8081);
+		Socket sock = new Socket("127.0.0.1", 9091);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -123,39 +124,76 @@ public class Gui {
 		
 		
 		JButton answer1 = new JButton("Option1");
+		answer1.setOpaque(false);
+		answer1.setContentAreaFilled(false);
+		answer1.setBorderPainted(true);
+		answer1.setForeground(Color.WHITE);
 		answer1.setBounds(185, 487, 215, 60);
 		frame.getContentPane().add(answer1);
 		answer1.setEnabled(false);
 		
 		JButton answer2 = new JButton("Option2");
-		answer2.setBounds(420, 487, 215, 60);
+		answer2.setOpaque(false);
+		answer2.setContentAreaFilled(false);
+		answer2.setBorderPainted(true);
+		answer2.setForeground(Color.WHITE);
+		answer2.setBounds(425, 487, 215, 60);
 		frame.getContentPane().add(answer2);
 		answer2.setEnabled(false);
 		
 		JButton answer3 = new JButton("Option3");
+		answer3.setOpaque(false);
+		answer3.setContentAreaFilled(false);
+		answer3.setBorderPainted(true);
+		answer3.setForeground(Color.WHITE);
 		answer3.setBounds(185, 567, 215, 60);
 		frame.getContentPane().add(answer3);
 		answer3.setEnabled(false);
 		
 		JButton answer4 = new JButton("Option4");
-		answer4.setBounds(420, 567, 215, 60);
+		answer4.setOpaque(false);
+		answer4.setContentAreaFilled(false);
+		answer4.setBorderPainted(true);
+		answer4.setForeground(Color.WHITE);
+		answer4.setBounds(425, 567, 215, 60);
 		frame.getContentPane().add(answer4);
 		answer4.setEnabled(false);
 		
 		JTextArea questionArea = new JTextArea();
 		questionArea.setEditable(false);
+		questionArea.setFont(new Font("Segoe UI", Font.BOLD, 20));
+		questionArea.setLineWrap(true);
+		questionArea.setWrapStyleWord(true);
+		
+		questionArea.setOpaque(false);
+		questionArea.setForeground(Color.WHITE);
+		
 		questionArea.setBounds(185, 387, 450, 80);
 		frame.getContentPane().add(questionArea);
 		
+		
 		JButton exitButton = new JButton("Exit");
+		exitButton.setOpaque(false);
+		exitButton.setContentAreaFilled(false);
+		exitButton.setBorderPainted(true);
+		exitButton.setForeground(Color.WHITE);
 		exitButton.setBounds(1040, 577, 140, 40);
 		frame.getContentPane().add(exitButton);
 		
 		JButton startButton = new JButton("Start");
+		startButton.setOpaque(false);
+		startButton.setContentAreaFilled(false);
+		startButton.setBorderPainted(true);
+		startButton.setForeground(Color.WHITE);
+
 		startButton.setBounds(880, 577, 140, 40);
 		frame.getContentPane().add(startButton);
 		
 		JButton nextQuestionButton = new JButton("Next question");
+		nextQuestionButton.setOpaque(false);
+		nextQuestionButton.setContentAreaFilled(false);
+		nextQuestionButton.setBorderPainted(true);
+		nextQuestionButton.setForeground(Color.WHITE);
 		nextQuestionButton.setBounds(676, 604, 155, 23);
 		frame.getContentPane().add(nextQuestionButton);
 		nextQuestionButton.setEnabled(false);
