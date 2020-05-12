@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.prefs.BackingStoreException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -28,6 +29,7 @@ import javax.swing.JOptionPane;
 public class Gui {
 
 	private JFrame frame;
+	private int questionNumber = 1;
 
 	/**
 	 * Launch the application.
@@ -89,6 +91,29 @@ public class Gui {
 		questionArea.setText(question.getQuestion());
 	}
 	
+	public void backgroundUpdater(int questionNumber, JLabel backgroundLabel) {
+		ImageIcon icon = null;
+		  switch(questionNumber) {
+		  case 1:
+		  		icon  = new ImageIcon("Images/q1.jpg");
+		  		break;
+		  	case 2:
+		  		icon  = new ImageIcon("Images/q2.jpg");
+		  		break;
+		  	case 3:
+		  		icon  = new ImageIcon("Images/q3.jpg");
+		  		break;
+		  	case 4:
+		  		icon  = new ImageIcon("Images/q4.jpg");
+		  		break;
+		  	case 5:
+		  		icon  = new ImageIcon("Images/q5.jpg");
+		  		break;
+		  		
+		  }
+		  backgroundLabel.setIcon(icon);
+	}
+	
 	public void initialize(Socket sock) throws UnknownHostException, IOException, ClassNotFoundException {
 
 		frame = new JFrame();
@@ -142,12 +167,10 @@ public class Gui {
 		frame.getContentPane().add(backgroundLabel);
 		
 		
-		int correctAnswers = 0;
 		PrintStream answearEmitter = new PrintStream(sock.getOutputStream());
         InputStream inputStream = sock.getInputStream();
 		// create a DataInputStream so we can read data from it.
         ObjectInputStream  objectInputStream = new ObjectInputStream(inputStream);
-        Scanner socketReader = new Scanner(sock.getInputStream());
         
         
 		
@@ -191,7 +214,6 @@ public class Gui {
 						  nextQuestionButton.setEnabled(false);
 						  System.exit(0);
 					  }
-						System.out.println("citit prima intrebare");
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -214,7 +236,6 @@ public class Gui {
 						  nextQuestionButton.setEnabled(false);
 						  System.exit(0);
 					  }
-						System.out.println("citit prima intrebare");
 					} catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -243,14 +264,12 @@ public class Gui {
 						e1.printStackTrace();
 					}
 				 
-				 // System.out.println(serverM);
 				  
 			  } 
 			} );
 		startButton.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  ImageIcon icon  = new ImageIcon("Images/firstQuestion.jpg");
-				  backgroundLabel.setIcon(icon);
+				  backgroundUpdater(questionNumber, backgroundLabel);
 				  startButton.setEnabled(false);
 				  Question question = null;
 				try {
@@ -298,8 +317,9 @@ public class Gui {
 						  answer3.setEnabled(true);
 						  answer4.setEnabled(true);
 						  nextQuestionButton.setEnabled(false);
-						  
-						  
+						  questionNumber++;
+
+						  backgroundUpdater(questionNumber, backgroundLabel);
 				  }
 			  } 
 			} );

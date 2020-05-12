@@ -25,9 +25,11 @@ public class Server {
 				"Roma", "Ierusalim", "Atena", "Constantinopol", "Constantinopol");
 		Question question4 = new Question("Care a fost primul aparat care putea inregistra si reproduce sunetele?", 
 				"casetofonul", "fonograful", "gramofonul", "diapazonul", "fonograful");
+		Question question5 = new Question("Care din urmatoarele personaje de animatie nu au fost creatia lui Joseph Barbera?", 
+				"Scooby Doo", "Familia Flintstone", "Bambi", "The Jetsons", "Bambi");
 		
 		ArrayList<Question> questions = new ArrayList<Question>();
-		questions.add(question1); questions.add(question2); questions.add(question3); questions.add(question4);
+		questions.add(question1); questions.add(question2); questions.add(question3); questions.add(question4);  questions.add(question5);
 		 
 		// get the output stream from the socket.
         OutputStream outputStream = sock.getOutputStream();
