@@ -12,6 +12,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -26,6 +27,7 @@ import javax.swing.JTextArea;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 public class Gui {
 
@@ -144,7 +146,7 @@ public class Gui {
 		frame.getContentPane().add(backgroundLabel);
 		
 		
-		
+		int correctAnswers = 0;
 		PrintStream answearEmitter = new PrintStream(sock.getOutputStream());
         InputStream inputStream = sock.getInputStream();
 		// create a DataInputStream so we can read data from it.
@@ -158,7 +160,22 @@ public class Gui {
 				  answearEmitter.println(answer1.getText());
 				  nextQuestionButton.setEnabled(true);
 				  activateAnswers(answer1, answer2, answer3, answer4, false);
-				  
+				  String serverM = null;
+				  try {
+					  serverM = (String)objectInputStream.readObject();
+					  System.out.println(serverM);
+					  if(serverM.equals("incorrect")) {
+						  JOptionPane.showMessageDialog(null, "Mai bine mergeai la munca");
+						  TimeUnit.SECONDS.sleep(1);
+						  nextQuestionButton.setEnabled(false);
+						  System.exit(0);
+					  }
+					  
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				
 				  
 				  
 			  } 
@@ -168,6 +185,22 @@ public class Gui {
 				  answearEmitter.println(answer2.getText());
 				  nextQuestionButton.setEnabled(true);
 				  activateAnswers(answer1, answer2, answer3, answer4, false);
+				  String serverM = null;
+				  try {
+					  serverM = (String)objectInputStream.readObject();
+					  System.out.println(serverM);
+					  if(serverM.equals("incorrect")) {
+						  JOptionPane.showMessageDialog(null, "Mai bine mergeai la munca");
+						  TimeUnit.SECONDS.sleep(1);
+						  nextQuestionButton.setEnabled(false);
+						  System.exit(0);
+					  }
+						System.out.println("citit prima intrebare");
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				  
 			  } 
 			} );
 		answer3.addActionListener(new ActionListener() { 
@@ -175,13 +208,47 @@ public class Gui {
 				  answearEmitter.println(answer3.getText());
 				  nextQuestionButton.setEnabled(true);
 				  activateAnswers(answer1, answer2, answer3, answer4, false);
+				  String serverM = null;
+				  try {
+					  serverM = (String)objectInputStream.readObject();
+					  System.out.println(serverM);
+					  if(serverM.equals("incorrect")) {
+						  JOptionPane.showMessageDialog(null, "Mai bine mergeai la munca");
+						  TimeUnit.SECONDS.sleep(1);
+						  nextQuestionButton.setEnabled(false);
+						  System.exit(0);
+					  }
+						System.out.println("citit prima intrebare");
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				  
 			  } 
 			} );
 		answer4.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  answearEmitter.println(answer4.getText());
 				  nextQuestionButton.setEnabled(true);
+				  String serverM = null;
 				  activateAnswers(answer1, answer2, answer3, answer4, false);
+				  try {
+					  serverM = (String)objectInputStream.readObject();
+					  System.out.println(serverM);
+					  if(serverM.equals("incorrect")) {
+						  JOptionPane.showMessageDialog(null, "Mai bine mergeai la munca");
+						  TimeUnit.SECONDS.sleep(1);
+						  nextQuestionButton.setEnabled(false);
+						  System.exit(0);
+					  }
+					
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				 
+				 // System.out.println(serverM);
+				  
 			  } 
 			} );
 		startButton.addActionListener(new ActionListener() { 
@@ -192,39 +259,41 @@ public class Gui {
 				  Question question = null;
 				try {
 					question = (Question)objectInputStream.readObject();
+					System.out.println("citit prima intrebare");
 				} catch (ClassNotFoundException | IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				  renderQuestion(question, answer1, answer2, answer3, answer4, questionArea); 
 				  activateAnswers(answer1, answer2, answer3, answer4, true);
-				  System.out.println("apasat start");
+				  
 			  } 
 			} );
 		exitButton.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
-				  answearEmitter.println("exit");
 				  System.exit(1);
 			  } 
 			} );
 		nextQuestionButton.addActionListener(new ActionListener() { 
 			  public void actionPerformed(ActionEvent e) { 
 				  if(startButton.isEnabled() == false) {
+
 					  Question question = null;
 						try {
+							 
 							question = (Question)objectInputStream.readObject();
+							 System.out.println(question.getQuestion());
 						} catch (ClassNotFoundException | IOException e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-						  renderQuestion(question, answer1, answer2, answer3, answer4, questionArea); 
+						renderQuestion(question, answer1, answer2, answer3, answer4, questionArea); 
 						  answer1.setEnabled(true);
 						  answer2.setEnabled(true);
 						  answer3.setEnabled(true);
 						  answer4.setEnabled(true);
 						  nextQuestionButton.setEnabled(false);
 						  
-						 
+						  
 				  }
 			  } 
 			} );

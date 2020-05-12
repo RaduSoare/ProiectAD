@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class Server {
 
 	public static void main(String[] args) throws IOException {
-		String answear;
+		String answear = null;
 		ServerSocket server_sock = new ServerSocket(8081);
 		Socket sock = server_sock.accept();
 		Scanner socketReader = new Scanner(sock.getInputStream());
@@ -36,18 +36,12 @@ public class Server {
 
         for(int i = 0; i < questions.size(); i++) {
         	objectOutputStream.writeObject(questions.get(i));
-        	System.out.println("Trimis intrebearea" + i);
         	answear = socketReader.nextLine();
-        	System.out.println("Citit raspuuns intrebare " + i);
+        	
         	if(answear.equals(questions.get(i).getcorrectAnswear())) {
-        		System.out.println("raspuns corect");
-        	//	socketEmitter.print("ok");
-        		System.out.println("S-a trimis catre client ok");
-        		continue;
+        		objectOutputStream.writeObject("ok");
         	} else {
-        		System.out.println("raspuns gresit");
-        		//socketEmitter.print("incorrect");
-        		System.out.println("S-a trimis catre client incorect");
+        		objectOutputStream.writeObject("incorrect");
         		break;
         	}
         }
